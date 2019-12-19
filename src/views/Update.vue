@@ -18,12 +18,12 @@
                 </Upload>
             </FormItem>
 
-<!--            <FormItem v-if="formItem.isUploadFile">-->
-<!--                <Spin>-->
-<!--                    <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>-->
-<!--                    <div>正在上传...</div>-->
-<!--                </Spin>-->
-<!--            </FormItem>-->
+            <!--            <FormItem v-if="formItem.isUploadFile">-->
+            <!--                <Spin>-->
+            <!--                    <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>-->
+            <!--                    <div>正在上传...</div>-->
+            <!--                </Spin>-->
+            <!--            </FormItem>-->
 
             <FormItem v-if="apkInfo">
                 <Avatar shape="square" icon="ios-person" size="large" :src="apkInfo.icon"/>
@@ -190,12 +190,11 @@
 
                 axios.post(this.formItem.apiUrl, this.postBody, {
                     headers: this.header,
+                    baseURL: token.baseUrl,
                 }).then(function (response) {
-                    // eslint-disable-next-line no-console
-                    console.log(response);
+                    this.$Message.success("版本发布完成!.")
                 }).catch(function (error) {
-                    // eslint-disable-next-line no-console
-                    console.log(error);
+                    this.$Message.error(error)
                 });
             }
         }
