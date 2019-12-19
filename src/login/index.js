@@ -17,6 +17,7 @@ async function login(loginApi) {
         token.token = "Bearer " + response.data.access_token
         // eslint-disable-next-line no-console
         console.log("登录成功:" + token.token)
+        localStorage.setItem("token", token.token)
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);

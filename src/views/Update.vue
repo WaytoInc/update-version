@@ -3,8 +3,8 @@
         <Form :model="formItem" :label-width="100">
             <FormItem label="APK文件:">
                 <Upload
-                        multiple
                         type="drag"
+                        paste
                         :before-upload="onBeforeUpload"
                         :on-success="onUploadSuccess"
                         :on-error="onUploadError"
@@ -93,6 +93,9 @@
     export default {
         data() {
             return {
+                header: {
+                    'Authorization': localStorage.getItem("token")
+                },
                 formItem: {
                     //选择的文件
                     file: null,
@@ -116,9 +119,6 @@
             document.title = "版本发布"
         },
         computed: {
-            header: function () {
-                return {'Authorization': token.token}
-            },
             postBody: function () {
                 if (this.apkInfo) {
                     let versionName = this.apkInfo.versionName
@@ -154,6 +154,8 @@
                 this.formItem.file = file
                 this.formItem.isUploadFile = true
 
+                this.header['Authorization'] = localStorage.getItem("token")
+
                 const parser = new ApkParser(file)
                 parser.parse().then(result => {
                     // eslint-disable-next-line no-console
@@ -173,7 +175,9 @@
                 this.formItem.isUploadFile = false
             },
             updateVersion() {
-                if (!token.token) {
+                this.header['Authorization'] = localStorage.getItem("token")
+
+                if (!this.header['Authorization']) {
                     this.$Message.error("登录失败, 请刷新重试..")
                     return
                 }
