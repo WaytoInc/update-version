@@ -18,12 +18,12 @@
                 </Upload>
             </FormItem>
 
-            <FormItem v-if="formItem.isUploadFile">
-                <Spin>
-                    <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
-                    <div>正在上传...</div>
-                </Spin>
-            </FormItem>
+<!--            <FormItem v-if="formItem.isUploadFile">-->
+<!--                <Spin>-->
+<!--                    <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>-->
+<!--                    <div>正在上传...</div>-->
+<!--                </Spin>-->
+<!--            </FormItem>-->
 
             <FormItem v-if="apkInfo">
                 <Avatar shape="square" icon="ios-person" size="large" :src="apkInfo.icon"/>
@@ -180,6 +180,11 @@
 
                 if (!this.apkInfo) {
                     this.$Message.error("请先上传APK文件.")
+                    return
+                }
+
+                if (this.formItem.isUploadFile) {
+                    this.$Message.error("请等待文件上传完成.")
                     return
                 }
 
