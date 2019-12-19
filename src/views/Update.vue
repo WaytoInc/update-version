@@ -66,7 +66,7 @@
             <FormItem label="更新说明:">
                 <Input v-model="description"
                        type="textarea"
-                       rows="4"
+                       :rows="4"
                        placeholder="请输入版本更新说明:"/>
             </FormItem>
 
@@ -188,13 +188,19 @@
                     return
                 }
 
+                this.header["Content-Type"] = "application/json;charset=UTF-8"
+                let self = this
                 axios.post(this.formItem.apiUrl, this.postBody, {
                     headers: this.header,
                     baseURL: token.baseUrl,
                 }).then(function (response) {
-                    this.$Message.success("版本发布完成!.")
+                    if (response.data.code < 300 && response.data.code >= 200) {
+                        self.$Message.success("版本发布完成!.")
+                    } else {
+                        self.$Message.error(response.data.msg)
+                    }
                 }).catch(function (error) {
-                    this.$Message.error(error)
+                    self.$Message.error(error)
                 });
             }
         }
