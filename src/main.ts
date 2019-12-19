@@ -8,8 +8,6 @@ import 'view-design/dist/styles/iview.css'
 Vue.config.productionTip = false;
 Vue.use(ViewUI);
 
-Vue.prototype.token = "";
-
 new Vue({
     router,
     store,

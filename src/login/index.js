@@ -1,5 +1,4 @@
 import axios from "axios"
-import token from "./token.js"
 
 async function login(loginApi) {
     try {
@@ -10,14 +9,16 @@ async function login(loginApi) {
         formData.append("username", "zhaoyi")
         formData.append("password", "zhaoyi")
 
+        let baseUrl = localStorage.getItem("baseUrl")
+
         const response = await axios.post(loginApi, formData, {
-            baseURL: token.baseUrl,
+            baseURL: baseUrl,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         });
-        token.token = "Bearer " + response.data.access_token
+        let token = "Bearer " + response.data.access_token
         // eslint-disable-next-line no-console
-        console.log("登录成功:" + token.token)
-        localStorage.setItem("token", token.token)
+        console.log("登录成功:" + token)
+        localStorage.setItem("token", token)
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);
@@ -25,13 +26,14 @@ async function login(loginApi) {
 }
 
 export default function (loginApi) {
+    let token = localStorage.getItem("token")
     // eslint-disable-next-line no-empty
-    if (!token.token) {
+    if (!token) {
         // eslint-disable-next-line no-console
         console.log("重新登录:" + loginApi)
         login(loginApi)
     } else {
         // eslint-disable-next-line no-console
-        console.log("已登录:" + token.token)
+        console.log("已登录:" + token)
     }
 }

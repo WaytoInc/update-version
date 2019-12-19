@@ -49,6 +49,13 @@
                 <Input v-model="formItem.baseUrl" placeholder="请输入服务器地址"/>
             </FormItem>
 
+            <FormItem label="可选服务器:" class="apk_info">
+                <Select @on-change="onUrlChange">
+                    <Option v-for="item in urls" :value="item.url" :key="item.url">{{ item.label +' '+ item.url}}
+                    </Option>
+                </Select>
+            </FormItem>
+
             <FormItem label="登录接口:">
                 <Input v-model="formItem.loginUrl" placeholder="请输入接口地址"/>
             </FormItem>
@@ -87,8 +94,8 @@
 <script>
     import axios from "axios"
     import login from "../login"
-    import token from "../login/token"
     import ApkParser from 'app-info-parser/src/apk'
+    import urls from '../../public/json/urls'
 
     export default {
         data() {
@@ -111,11 +118,12 @@
                 apkInfo: null,
                 //0:非强制更新 1:强制更新 -1:内测用户更新
                 coerce: 0,
-                coerceList: [{label: "非强制更新", value: 0}, {label: "强制更新", value: 1}, {label: "内测用户更新", value: -1}]
+                coerceList: [{label: "非强制更新", value: 0}, {label: "强制更新", value: 1}, {label: "内测用户更新", value: -1}],
+                urls: urls
             };
         },
         mounted() {
-            this.formItem.baseUrl = token.baseUrl
+            this.formItem.baseUrl = urls[0].url
             document.title = "版本发布"
         },
         computed: {
@@ -150,6 +158,11 @@
             }
         },
         methods: {
+            onUrlChange(value) {
+                localStorage.setItem("baseUrl", value)
+                localStorage.setItem("token", '')
+                this.formItem.baseUrl = value
+            },
             onBeforeUpload(file) {
                 this.formItem.file = file
                 this.formItem.isUploadFile = true
@@ -194,9 +207,12 @@
 
                 this.header["Content-Type"] = "application/json;charset=UTF-8"
                 let self = this
+
+                let baseUrl = localStorage.getItem("baseUrl")
+
                 axios.post(this.formItem.apiUrl, this.postBody, {
                     headers: this.header,
-                    baseURL: token.baseUrl,
+                    baseURL: baseUrl,
                 }).then(function (response) {
                     if (response.data.code < 300 && response.data.code >= 200) {
                         self.$Message.success("版本发布完成!.")
